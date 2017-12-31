@@ -87,11 +87,24 @@ class ILI9341_driver
                 uint8_t repeat_pixel=0);
         void begin_spi(void);
         void end_spi(void);
+        inline void fastio(volatile uint8_t *port, uint8_t mask, uint8_t state)
+        {
+            if (state == 1)
+            {
+                *port |= mask;
+            }
+            else
+            {
+                *port &= ~mask;
+            }
+        }
 
         //pins
         uint8_t chip_select_pin,
                 data_ncommand_pin,
                 reset_pin;
+        volatile uint8_t *chip_select_port, *data_ncommand_port, *reset_port;
+        uint8_t chip_select_mask, data_ncommand_mask, reset_mask;
 
         SPISettings spi_settings;
 

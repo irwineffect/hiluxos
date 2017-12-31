@@ -21,12 +21,6 @@ void ILI9341_driver::begin(uint8_t _cs, uint8_t _data_ncommand, uint8_t _rst)
     reset_port = portOutputRegister(digitalPinToPort(_rst));
     reset_mask = digitalPinToBitMask(_rst);
 
-    //Serial.println("ports/masks:");
-    //Serial.print((uint8_t)chip_select_port); Serial.print("\t"); Serial.println(chip_select_mask, BIN);
-    //Serial.print((uint8_t)data_ncommand_port); Serial.print("\t"); Serial.println(data_ncommand_mask, BIN);
-    //Serial.print((uint8_t)reset_port); Serial.print("\t"); Serial.println(reset_mask, BIN);
-
-
     // Set pin modes and intitalize pin states
     pinMode(chip_select_pin, OUTPUT);
     digitalWrite(chip_select_pin, HIGH);
@@ -39,7 +33,7 @@ void ILI9341_driver::begin(uint8_t _cs, uint8_t _data_ncommand, uint8_t _rst)
     hardware_reset();
 
     // Setup SPI bus
-    spi_settings = SPISettings(8000000, MSBFIRST, SPI_MODE0);
+    spi_settings = SPISettings(6000000, MSBFIRST, SPI_MODE0);
     SPI.begin();
 
     // Magic configuration taken from
@@ -88,7 +82,7 @@ void ILI9341_driver::wake(void)
     delay(5);
 }
 
-void ILI9341_driver::draw_pixel(uint16_t x, uint16_t y, Pixel color)
+void ILI9341_driver::draw_pixel(Pixel color, uint16_t x, uint16_t y)
 {
     uint8_t addr_buff[4];
 
@@ -108,7 +102,7 @@ void ILI9341_driver::draw_pixel(uint16_t x, uint16_t y, Pixel color)
     write_command((uint8_t)Command::PASET, addr_buff, 4, 1);
 
     // set the data for the pixel
-    write_pixels(&color, 0, 1);
+    write_pixels(&color, 1, 1);
 
     end_spi();
 }
@@ -116,11 +110,6 @@ void ILI9341_driver::draw_pixel(uint16_t x, uint16_t y, Pixel color)
 void ILI9341_driver::fill_screen(Pixel color)
 {
     uint8_t addr_buff[4];
-    Serial.println("filling screen with: ");
-    Serial.print("  red: 0x"); Serial.println(color.red, HEX);
-    Serial.print("  green: 0x"); Serial.println(color.green, HEX);
-    Serial.print("  blue: 0x"); Serial.println(color.blue, HEX);
-
     begin_spi();
 
     // Set the start/end addresss for the write window
@@ -139,8 +128,7 @@ void ILI9341_driver::fill_screen(Pixel color)
     write_command((uint8_t)Command::PASET, addr_buff, 4, 1);
 
     // set the data for the pixel
-    write_pixels(&color, 0x12C00, 1, 1);
-    write_command((uint8_t)Command::NOP, 0, 0, 1);
+    write_pixels(&color, NUM_PIXELS_IN_SCREEN, 1, 1);
     end_spi();
 }
 
@@ -172,22 +160,15 @@ void ILI9341_driver::write_command(uint8_t command, uint8_t data[], uint8_t
         begin_spi();
     }
 
-    Serial.println("write_command()");
-    Serial.print("  command: 0x"); Serial.println(command, HEX);
     // send the command byte, while the data/ncommand pin is low
-    //Serial.print("pin_state: "); Serial.println(digitalRead(data_ncommand_pin));
     fastio(data_ncommand_port, data_ncommand_mask, 0);
-    //Serial.print("pin_state: "); Serial.println(digitalRead(data_ncommand_pin));
     SPDR = command;
     while(!(SPSR & _BV(SPIF)));
-    //Serial.print("pin_state: "); Serial.println(digitalRead(data_ncommand_pin));
     fastio(data_ncommand_port, data_ncommand_mask, 1);
-    //Serial.print("pin_state: "); Serial.println(digitalRead(data_ncommand_pin));
 
     //tranfer any parameters associated with the command
     for (uint8_t i=0; i < len; ++i)
     {
-        Serial.print("  data: 0x"); Serial.println(data[i], HEX);
         SPDR = data[i];
         while(!(SPSR & _BV(SPIF)));
     }
@@ -205,12 +186,6 @@ void ILI9341_driver::write_pixels(Pixel data[], uint32_t len, uint8_t
     {
         begin_spi();
     }
-    Serial.println("write_pixels()");
-    Serial.print("  red: 0x"); Serial.println(data[0].red, HEX);
-    Serial.print("  green: 0x"); Serial.println(data[0].green, HEX);
-    Serial.print("  blue: 0x"); Serial.println(data[0].blue, HEX);
-    Serial.print("  len: 0x"); Serial.println(len, HEX);
-    Serial.print("  repeat_pixel: "); Serial.println(repeat_pixel);
 
     // send the command byte, while the data/ncommand pin is low
     fastio(data_ncommand_port, data_ncommand_mask, 0);
@@ -218,35 +193,22 @@ void ILI9341_driver::write_pixels(Pixel data[], uint32_t len, uint8_t
     while(!(SPSR & _BV(SPIF)));
     fastio(data_ncommand_port, data_ncommand_mask, 1);
 
-    Serial.println("writing pixels");
     // Write out the pixels
-    if (repeat_pixel == 1)
+    uint32_t j = 0;
+    for (uint32_t i = 0; i < len; ++i)
     {
-        for (uint32_t i = 0; i < len; ++i)
+        SPDR = data[j].red << 2;
+        while(!(SPSR & _BV(SPIF)));
+
+        SPDR = data[j].green << 2;
+        while(!(SPSR & _BV(SPIF)));
+
+        SPDR = data[j].blue << 2;
+        while(!(SPSR & _BV(SPIF)));
+
+        if (repeat_pixel == 0)
         {
-            //Serial.println(i);
-            SPDR = data[0].red << 2;
-            while(!(SPSR & _BV(SPIF)));
-
-            SPDR = data[0].green << 2;
-            while(!(SPSR & _BV(SPIF)));
-
-            SPDR = data[0].blue << 2;
-            while(!(SPSR & _BV(SPIF)));
-        }
-    }
-    else
-    {
-        for (uint32_t i = 0; i < len; ++i)
-        {
-            SPDR = data[i].red;
-            while(!(SPSR & _BV(SPIF)));
-
-            SPDR = data[i].green;
-            while(!(SPSR & _BV(SPIF)));
-
-            SPDR = data[i].blue;
-            while(!(SPSR & _BV(SPIF)));
+            ++j;
         }
     }
 
@@ -259,18 +221,12 @@ void ILI9341_driver::write_pixels(Pixel data[], uint32_t len, uint8_t
 
 void ILI9341_driver::begin_spi(void)
 {
-    Serial.println("begin_spi()");
-    //Serial.print("pin_state: "); Serial.println(digitalRead(chip_select_pin));
     fastio(chip_select_port, chip_select_mask, 0);
-    //Serial.print("pin_state: "); Serial.println(digitalRead(chip_select_pin));
     SPI.beginTransaction(spi_settings);
 }
 
 void ILI9341_driver::end_spi(void)
 {
-    //Serial.print("pin_state: "); Serial.println(digitalRead(chip_select_pin));
     fastio(chip_select_port, chip_select_mask, 1);
-    //Serial.print("pin_state: "); Serial.println(digitalRead(chip_select_pin));
     SPI.endTransaction();
-    Serial.println("end_spi()");
 }

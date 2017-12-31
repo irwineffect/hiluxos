@@ -73,11 +73,16 @@ class ILI9341_driver
         void read_command(uint8_t command, uint8_t data[], uint8_t len);
 
         // Drawing functions
-        void draw_pixel(uint16_t x, uint16_t y, Pixel color);
+        void draw_pixel(Pixel color, uint16_t x, uint16_t y);
         void fill_screen(Pixel color);
         void draw_line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,
                 Pixel color);
         void draw_circle(uint16_t x, uint16_t y, uint16_t r, Pixel color);
+
+        static const uint16_t WIDTH  = 320,
+                              HEIGHT = 240;
+
+        static const uint32_t NUM_PIXELS_IN_SCREEN = 0x12C00;
 
 
     private:
@@ -107,11 +112,6 @@ class ILI9341_driver
         uint8_t chip_select_mask, data_ncommand_mask, reset_mask;
 
         SPISettings spi_settings;
-
-        static const uint16_t WIDTH  = 320,
-                              HEIGHT = 240;
-
-        static const uint32_t NUM_PIXELS_IN_SCREEN = 0x12C00;
 
         // Command set
         enum class Command : uint8_t

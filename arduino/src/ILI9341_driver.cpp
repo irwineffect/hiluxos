@@ -132,14 +132,104 @@ void ILI9341_driver::fill_screen(Pixel color)
     end_spi();
 }
 
-void ILI9341_driver::draw_line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t
-        y2, Pixel color)
+void ILI9341_driver::draw_line(Pixel color, uint16_t x1, uint16_t y1, uint16_t
+        x2, uint16_t y2)
 {
 }
 
-void ILI9341_driver::draw_circle(uint16_t x, uint16_t y, uint16_t r, Pixel
-        color)
+void ILI9341_driver::draw_hline(Pixel color, uint16_t x1, uint16_t x2, uint16_t
+        y)
 {
+    uint8_t addr_buff[4];
+
+    // if x1 is greater than x2, swap them
+    if (x1 > x2)
+    {
+        uint16_t tmp = x1;
+        x1 = x2;
+        x2 = tmp;
+    }
+
+    // calculate the number of pixels in the line
+    uint16_t num_pixels = x2 - x1;
+
+    begin_spi();
+
+    // Set the address for the pixel
+    addr_buff[0] = (x1 >> 8) & 0xFF;
+    addr_buff[1] = x1 & 0xFF;
+    addr_buff[2] = (x2 >> 8) & 0xFF;
+    addr_buff[3] = x2 & 0xFF;
+    write_command((uint8_t)Command::CASET, addr_buff, 4, 1);
+
+    addr_buff[0] = (y >> 8) & 0xFF;
+    addr_buff[1] = y & 0xFF;
+    addr_buff[2] = (y >> 8) & 0xFF;
+    addr_buff[3] = y & 0xFF;
+    write_command((uint8_t)Command::PASET, addr_buff, 4, 1);
+
+    // set the data for the pixels
+    write_pixels(&color, num_pixels, 1, 1);
+
+    end_spi();
+}
+
+void ILI9341_driver::draw_vline(Pixel color, uint16_t y1, uint16_t y2, uint16_t
+        x)
+{
+    uint8_t addr_buff[4];
+
+    // if y1 is greater than y2, swap them
+    if (y1 > y2)
+    {
+        uint16_t tmp = y1;
+        y1 = y2;
+        y2 = tmp;
+    }
+
+    // calculate the number of pixels in the line
+    uint16_t num_pixels = y2 - y1;
+
+    begin_spi();
+
+    // Set the address for the pixel
+    addr_buff[0] = (x >> 8) & 0xFF;
+    addr_buff[1] = x & 0xFF;
+    addr_buff[2] = (x >> 8) & 0xFF;
+    addr_buff[3] = x & 0xFF;
+    write_command((uint8_t)Command::CASET, addr_buff, 4, 1);
+
+    addr_buff[0] = (y1 >> 8) & 0xFF;
+    addr_buff[1] = y1 & 0xFF;
+    addr_buff[2] = (y2 >> 8) & 0xFF;
+    addr_buff[3] = y2 & 0xFF;
+    write_command((uint8_t)Command::PASET, addr_buff, 4, 1);
+
+    // set the data for the pixels
+    write_pixels(&color, num_pixels, 1, 1);
+
+    end_spi();
+
+}
+
+void ILI9341_driver::draw_circle(Pixel color, uint16_t x, uint16_t y, uint16_t
+        r)
+{
+}
+
+void ILI9341_driver:: draw_rectangle(Pixel color, uint16_t x, uint16_t y,
+        uint16_t w, uint16_t h)
+{
+    uint16_t x2 = x + w - 1;
+    uint16_t y2 = y + h - 1;
+
+    begin_spi();
+
+    uint32_t num_pixels = (uint32_t) w * h;
+    write_window(x, y, x2, y2);
+    write_pixels(&color, num_pixels, 1, 1);
+
+    end_spi();
 }
 
 void ILI9341_driver::hardware_reset(void)

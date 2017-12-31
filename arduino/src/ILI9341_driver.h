@@ -75,9 +75,13 @@ class ILI9341_driver
         // Drawing functions
         void draw_pixel(Pixel color, uint16_t x, uint16_t y);
         void fill_screen(Pixel color);
-        void draw_line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,
-                Pixel color);
-        void draw_circle(uint16_t x, uint16_t y, uint16_t r, Pixel color);
+        void draw_hline(Pixel color, uint16_t x1, uint16_t x2, uint16_t y);
+        void draw_vline(Pixel color, uint16_t y1, uint16_t y2, uint16_t x);
+        void draw_line(Pixel color, uint16_t x1, uint16_t y1, uint16_t x2,
+                uint16_t y2);
+        void draw_rectangle(Pixel color, uint16_t x, uint16_t y, uint16_t w,
+                uint16_t h);
+        void draw_circle(Pixel color, uint16_t x, uint16_t y, uint16_t r);
 
         static const uint16_t WIDTH  = 320,
                               HEIGHT = 240;
@@ -92,6 +96,23 @@ class ILI9341_driver
                 uint8_t repeat_pixel=0);
         void begin_spi(void);
         void end_spi(void);
+        inline void write_window(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
+        {
+            uint8_t addr_buff[4];
+
+            addr_buff[0] = (x1 >> 8) & 0xFF;
+            addr_buff[1] = x1 & 0xFF;
+            addr_buff[2] = (x2 >> 8) & 0xFF;
+            addr_buff[3] = x2 & 0xFF;
+            write_command((uint8_t)Command::CASET, addr_buff, 4, 1);
+
+            addr_buff[0] = (y1 >> 8) & 0xFF;
+            addr_buff[1] = y1 & 0xFF;
+            addr_buff[2] = (y2 >> 8) & 0xFF;
+            addr_buff[3] = y2 & 0xFF;
+            write_command((uint8_t)Command::PASET, addr_buff, 4, 1);
+        }
+
         inline void fastio(volatile uint8_t *port, uint8_t mask, uint8_t state)
         {
             if (state == 1)

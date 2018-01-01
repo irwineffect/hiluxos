@@ -82,6 +82,7 @@ class ILI9341_driver
         void draw_rectangle(Pixel color, uint16_t x, uint16_t y, uint16_t w,
                 uint16_t h);
         void draw_circle(Pixel color, uint16_t x, uint16_t y, uint16_t r);
+        void draw_char(Pixel color, char c, uint16_t x, uint16_t y, Pixel bg);
 
         static const uint16_t WIDTH  = 320,
                               HEIGHT = 240;

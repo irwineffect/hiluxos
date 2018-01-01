@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include "ILI9341_driver.h"
+#include "font8x8_basic.h"
 
 ILI9341_driver::ILI9341_driver(void)
 {
@@ -229,6 +230,49 @@ void ILI9341_driver:: draw_rectangle(Pixel color, uint16_t x, uint16_t y,
     write_window(x, y, x2, y2);
     write_pixels(&color, num_pixels, 1, 1);
 
+    end_spi();
+}
+
+void ILI9341_driver::draw_char(Pixel color, char c, uint16_t x, uint16_t y,
+        Pixel bg)
+{
+    begin_spi();
+    write_window(x, y, x+7, y+7);
+
+    // send ram write command
+    fastio(data_ncommand_port, data_ncommand_mask, 0);
+    SPDR = static_cast<uint8_t>(Command::RAMWR);
+    while(!(SPSR & _BV(SPIF)));
+    fastio(data_ncommand_port, data_ncommand_mask, 1);
+
+    Pixel *current_pixel;
+
+    for (uint8_t i = 0; i < 8; ++i)
+    {
+       uint8_t current_byte = pgm_read_byte(&(font8x8_basic[(uint8_t)c][i]));
+       for (uint8_t j = 0; j < 8; ++j)
+       {
+            if (current_byte & (1 << j))
+            {
+                current_pixel = &color;
+            }
+            else
+            {
+                current_pixel = &bg;
+            }
+
+            SPDR = current_pixel->red << 2;
+            while(!(SPSR & _BV(SPIF)));
+
+            SPDR = current_pixel->green << 2;
+            while(!(SPSR & _BV(SPIF)));
+
+            SPDR = current_pixel->blue << 2;
+            while(!(SPSR & _BV(SPIF)));
+       }
+    }
+
+    write_command((uint8_t)Command::NOP, 0, 0, 1);
     end_spi();
 }
 

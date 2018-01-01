@@ -82,6 +82,7 @@ void ILI9341_driver::begin(uint8_t _cs, uint8_t _data_ncommand, uint8_t _rst)
     cursor_ypos = 0;
     text_color = Color::white;
     text_bg_color = Color::black;
+    text_scale = 1;
 }
 
 
@@ -251,7 +252,8 @@ void ILI9341_driver::draw_char(Pixel color, char c, uint16_t x, uint16_t y,
         Pixel bg)
 {
     begin_spi();
-    write_window(x, y, x+7, y+7);
+    write_window(x, y, x+(CHARACTER_WIDTH*text_scale)-1,
+            y+(CHARACTER_WIDTH*text_scale)-1);
 
     // send ram write command
     fastio(data_ncommand_port, data_ncommand_mask, 0);
@@ -264,25 +266,31 @@ void ILI9341_driver::draw_char(Pixel color, char c, uint16_t x, uint16_t y,
     for (uint8_t i = 0; i < 8; ++i)
     {
        uint8_t current_byte = pgm_read_byte(&(font8x8_basic[(uint8_t)c][i]));
-       for (uint8_t j = 0; j < 8; ++j)
+       for (uint8_t v_scale = 0; v_scale < text_scale; ++v_scale)
        {
-            if (current_byte & (1 << j))
-            {
-                current_pixel = &color;
-            }
-            else
-            {
-                current_pixel = &bg;
-            }
+           for (uint8_t j = 0; j < 8; ++j)
+           {
+               for (uint8_t h_scale = 0; h_scale < text_scale; ++h_scale)
+               {
+                    if (current_byte & (1 << j))
+                    {
+                        current_pixel = &color;
+                    }
+                    else
+                    {
+                        current_pixel = &bg;
+                    }
 
-            SPDR = current_pixel->red << 2;
-            while(!(SPSR & _BV(SPIF)));
+                    SPDR = current_pixel->red << 2;
+                    while(!(SPSR & _BV(SPIF)));
 
-            SPDR = current_pixel->green << 2;
-            while(!(SPSR & _BV(SPIF)));
+                    SPDR = current_pixel->green << 2;
+                    while(!(SPSR & _BV(SPIF)));
 
-            SPDR = current_pixel->blue << 2;
-            while(!(SPSR & _BV(SPIF)));
+                    SPDR = current_pixel->blue << 2;
+                    while(!(SPSR & _BV(SPIF)));
+               }
+           }
        }
     }
 
@@ -311,6 +319,13 @@ void ILI9341_driver::set_cursor(uint16_t x, uint16_t y)
     cursor_ypos = y;
 }
 
+void ILI9341_driver::reset_cursor(void)
+{
+    cursor_xpos = cursor_start_xpos;
+    cursor_ypos = cursor_start_ypos;
+}
+
+
 void ILI9341_driver::set_text_color(Pixel color)
 {
     text_color = color;
@@ -321,15 +336,20 @@ void ILI9341_driver::set_text_bg_color(Pixel color)
     text_bg_color = color;
 }
 
+void ILI9341_driver::set_text_scale(uint8_t scale)
+{
+    text_scale = scale;
+}
+
 void ILI9341_driver::putc(char c)
 {
     switch (c)
     {
         case '\n':
             cursor_xpos = cursor_start_xpos;
-            cursor_ypos += CHARACTER_HEIGHT;
+            cursor_ypos += CHARACTER_HEIGHT*text_scale;
 
-            if ((cursor_ypos + CHARACTER_HEIGHT) >= cursor_end_ypos)
+            if ((cursor_ypos + CHARACTER_HEIGHT*text_scale) >= cursor_end_ypos)
             {
                 cursor_ypos = cursor_start_ypos;
             }
@@ -342,13 +362,13 @@ void ILI9341_driver::putc(char c)
             draw_char(text_color, c, cursor_xpos, cursor_ypos, text_bg_color);
 
             // Logic for advancing the cursor.
-            cursor_xpos += CHARACTER_WIDTH;
-            if ((cursor_xpos + CHARACTER_WIDTH) >= cursor_end_xpos)
+            cursor_xpos += CHARACTER_WIDTH*text_scale;
+            if ((cursor_xpos + CHARACTER_WIDTH*text_scale) >= cursor_end_xpos)
             {
                 cursor_xpos = cursor_start_xpos;
-                cursor_ypos += CHARACTER_HEIGHT;
+                cursor_ypos += CHARACTER_HEIGHT*text_scale;
 
-                if ((cursor_ypos + CHARACTER_HEIGHT) >= cursor_end_ypos)
+                if ((cursor_ypos + CHARACTER_HEIGHT*text_scale) >= cursor_end_ypos)
                 {
                     cursor_ypos = cursor_start_ypos;
                 }

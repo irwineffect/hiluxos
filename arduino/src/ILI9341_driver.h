@@ -99,8 +99,10 @@ class ILI9341_driver
         void set_cursor(uint16_t x, uint16_t y);
         void set_text_color(Pixel color);
         void set_text_bg_color(Pixel color);
+        void set_text_scale(uint8_t scale);
         void putc(char c);
         void puts(const char c[]);
+        void reset_cursor(void);
 
         static const uint16_t WIDTH  = 320,
                               HEIGHT = 240;
@@ -173,6 +175,8 @@ class ILI9341_driver
             cursor_end_ypos;
 
         Pixel text_color, text_bg_color;
+
+        uint16_t text_scale;
 
         // Command set
         enum class Command : uint8_t

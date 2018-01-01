@@ -3,6 +3,9 @@
 #include "ILI9341_driver.h"
 #include "font8x8_basic.h"
 
+// for some reason Arduino is #defining putc as a macro?
+#undef putc
+
 ILI9341_driver::ILI9341_driver(void)
 {
 }
@@ -68,6 +71,17 @@ void ILI9341_driver::begin(uint8_t _cs, uint8_t _data_ncommand, uint8_t _rst)
     delay(5); //must wait 5ms if waking from sleep
     write_command((uint8_t)Command::DISPON, 0, 0, 1);
     end_spi();
+
+
+    // initialize text variables
+    cursor_start_xpos = 0;
+    cursor_start_ypos = 0;
+    cursor_end_xpos = WIDTH-1;
+    cursor_end_ypos = HEIGHT-1;
+    cursor_xpos = 0;
+    cursor_ypos = 0;
+    text_color = Color::white;
+    text_bg_color = Color::black;
 }
 
 
@@ -275,6 +289,83 @@ void ILI9341_driver::draw_char(Pixel color, char c, uint16_t x, uint16_t y,
     write_command((uint8_t)Command::NOP, 0, 0, 1);
     end_spi();
 }
+
+void ILI9341_driver::set_cursor_start(uint16_t x, uint16_t y)
+{
+    cursor_start_xpos = x;
+    cursor_start_ypos = y;
+
+    cursor_xpos = x;
+    cursor_ypos = y;
+}
+
+void ILI9341_driver::set_cursor_end(uint16_t x, uint16_t y)
+{
+    cursor_end_xpos = x;
+    cursor_end_ypos = y;
+}
+
+void ILI9341_driver::set_cursor(uint16_t x, uint16_t y)
+{
+    cursor_xpos = x;
+    cursor_ypos = y;
+}
+
+void ILI9341_driver::set_text_color(Pixel color)
+{
+    text_color = color;
+}
+
+void ILI9341_driver::set_text_bg_color(Pixel color)
+{
+    text_bg_color = color;
+}
+
+void ILI9341_driver::putc(char c)
+{
+    switch (c)
+    {
+        case '\n':
+            cursor_xpos = cursor_start_xpos;
+            cursor_ypos += CHARACTER_HEIGHT;
+
+            if ((cursor_ypos + CHARACTER_HEIGHT) >= cursor_end_ypos)
+            {
+                cursor_ypos = cursor_start_ypos;
+            }
+            break;
+        case '\r':
+            cursor_xpos = cursor_start_xpos;
+            break;
+
+        default:
+            draw_char(text_color, c, cursor_xpos, cursor_ypos, text_bg_color);
+
+            // Logic for advancing the cursor.
+            cursor_xpos += CHARACTER_WIDTH;
+            if ((cursor_xpos + CHARACTER_WIDTH) >= cursor_end_xpos)
+            {
+                cursor_xpos = cursor_start_xpos;
+                cursor_ypos += CHARACTER_HEIGHT;
+
+                if ((cursor_ypos + CHARACTER_HEIGHT) >= cursor_end_ypos)
+                {
+                    cursor_ypos = cursor_start_ypos;
+                }
+            }
+            break;
+    }
+}
+
+void ILI9341_driver::puts(const char c[])
+{
+    while (*c != '\0')
+    {
+        putc(*c);
+        ++c;
+    }
+}
+
 
 void ILI9341_driver::hardware_reset(void)
 {

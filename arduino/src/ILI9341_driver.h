@@ -4,6 +4,9 @@
 #include <Arduino.h>
 #include <SPI.h>
 
+// for some reason Arduino is #defining putc as a macro?
+#undef putc
+
 namespace Color
 {
     enum : uint32_t
@@ -33,6 +36,12 @@ class Pixel
 
         //    white  = 0xFFFFFF
         //};
+        Pixel(void)
+        {
+            red = 0;
+            green = 0;
+            blue = 0;
+        }
 
         Pixel(uint8_t _red, uint8_t _green, uint8_t _blue)
         {
@@ -84,11 +93,22 @@ class ILI9341_driver
         void draw_circle(Pixel color, uint16_t x, uint16_t y, uint16_t r);
         void draw_char(Pixel color, char c, uint16_t x, uint16_t y, Pixel bg);
 
+        // text manipulation functions
+        void set_cursor_start(uint16_t x, uint16_t y);
+        void set_cursor_end(uint16_t x, uint16_t y);
+        void set_cursor(uint16_t x, uint16_t y);
+        void set_text_color(Pixel color);
+        void set_text_bg_color(Pixel color);
+        void putc(char c);
+        void puts(const char c[]);
+
         static const uint16_t WIDTH  = 320,
                               HEIGHT = 240;
 
         static const uint32_t NUM_PIXELS_IN_SCREEN = 0x12C00;
 
+        static const uint8_t CHARACTER_WIDTH  = 8,
+                             CHARACTER_HEIGHT = 8;
 
     private:
         void write_command(uint8_t command, uint8_t data[], uint8_t len,
@@ -133,7 +153,26 @@ class ILI9341_driver
         volatile uint8_t *chip_select_port, *data_ncommand_port, *reset_port;
         uint8_t chip_select_mask, data_ncommand_mask, reset_mask;
 
+        // struct for holding spi settings
         SPISettings spi_settings;
+
+        // text manipulation variables
+        uint16_t
+            // The current cursor position.
+            cursor_xpos,
+            cursor_ypos,
+
+            // The "home" position of the cursor, text begins drawing here.
+            cursor_start_xpos,
+            cursor_start_ypos,
+
+            // The limit position of the cursor, once text reaches this
+            // location, further characters will be drawn starting from the
+            // home position.
+            cursor_end_xpos,
+            cursor_end_ypos;
+
+        Pixel text_color, text_bg_color;
 
         // Command set
         enum class Command : uint8_t

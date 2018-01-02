@@ -1,0 +1,10 @@
+#!/bin/sh
+rm *.o *.hex *.elf 2> /dev/null
+set -e
+echo "building"
+arm-none-eabi-as -g -mcpu=cortex-m4 -mthumb -o blink.o blink.s
+arm-none-eabi-ld -T layout.ld -o blink.elf blink.o
+arm-none-eabi-objcopy -O ihex -R .eeprom blink.elf blink.hex
+echo "build complete"
+echo "ready to upload, press reset on Teensy"
+teensy_loader_cli -w --mcu=mk64fx512 blink.hex

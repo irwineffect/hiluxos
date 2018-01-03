@@ -9,9 +9,31 @@ SECTIONS {
         KEEP(*(.vectors))
         . = 0x400;
         KEEP(*(.flashconfig*))
-        *(.startup)
-        *(.text)
+        *(.startup*)
+        *(.text*)
+        *(.rodata*)
+        . = ALIGN(8);
     } > FLASH
+
+    .data : {
+        . = ALIGN(8);
+        _sdata = .;
+        *(.fastrun*)
+        *(.data*)
+        . = ALIGN(8);
+        _edata = .;
+    } > RAM AT > FLASH
+
+    _sflashdata = LOADADDR(.data);
+
+    .bss : {
+        . = ALIGN(8);
+        _sbss = .;
+        *(.bss*)
+        *(COMMON)
+        . = ALIGN(8);
+        _ebss = .;
+    } > RAM
 
     _estack = ORIGIN(RAM) + LENGTH(RAM); /* stack pointer start */
 }

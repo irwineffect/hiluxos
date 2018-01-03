@@ -26,9 +26,7 @@
 .long 0xFFFFFFFE
 
 .section ".startup","x",%progbits
-.thumb_func
-.global _startup
-
+.thumb_func // Not sure why, but this is needed
 _startup:
     cpsid i // Disable interrupts
 
@@ -72,8 +70,6 @@ loop:
     bl delay
     b loop
 
-.thumb_func
-.global led_off
 led_off:
     ldr r6, =0x400FF080
     ldr r0, =0x0
@@ -88,11 +84,11 @@ led_on:
 
 delay:
     ldr r1, =0xA62A0
-delay_loop:
-    sub r1, r1, #1
-    cmp r1, #0
-    bne delay_loop
-    mov pc, r14
+    delay_loop:
+        sub r1, r1, #1
+        cmp r1, #0
+        bne delay_loop
+        mov pc, r14
 
 _halt:
     b _halt

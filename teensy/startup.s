@@ -51,16 +51,6 @@ _startup:
     ldr r0, =0x00043F82
     str r0, [r6]
 
-    // Configure the LED pin
-    ldr r6, =0x4004B014
-    ldr r0, =0x00000143
-    str r0, [r6]
-
-    // Set the LED pin (PTC 5) to output
-    ldr r6, =0x400FF094
-    ldr r0, =0x20
-    str r0, [r6]
-
     ldr fp, =_estack // necessary?
 
     // Zero out .data section. Not Strictly necessary, but I want to know if
@@ -106,46 +96,39 @@ _startup:
         cmp r5, r7
         bne bss_clear_loop
 
-    // Turn on LED
-    //ldr r6, =0x400FF080
-    //ldr r0, =0x20
-    //str r0, [r6]
-
+    // Jump to kernel main
     bl main
     b _halt // Shouldn't ever get here
 
-//loop:
-//    bl led_on
-//    bl delay
-//    bl led_off
-//    bl delay
-//    bl delay
-//    bl delay
-//    bl delay
-//    bl delay
-//    b loop
-//
-//led_off:
-//    ldr r6, =0x400FF080
-//    ldr r0, =0x0
-//    str r0, [r6]
-//    mov pc, r14
-//
-//led_on:
-//    ldr r6, =0x400FF080
-//    ldr r0, =0x20
-//    str r0, [r6]
-//    mov pc, r14
-//
-//delay:
-//    ldr r1, =0xA62A0
-//    delay_loop:
-//        sub r1, r1, #1
-//        cmp r1, #0
-//        bne delay_loop
-//        mov pc, r14
 
 _halt:
-    b _halt
+    // Configure the LED pin
+    ldr r6, =0x4004B014
+    ldr r0, =0x00000143
+    str r0, [r6]
+
+    // Set the LED pin (PTC 5) to output
+    ldr r6, =0x400FF094
+    ldr r0, =0x20
+    str r0, [r6]
+
+    ldr r6, =0x400FF080
+    ldr r0, =0x00
+    ldr r1, =0x20
+    ldr r3, =0x2FFFF
+
+halt_loop:
+    str r1, [r6]
+    bl halt_delay
+    str r0, [r6]
+    bl halt_delay
+    b halt_loop
+
+halt_delay:
+    mov r4, r3
+    sub r4, r4, #1
+    cmp r4, #0
+    bne [halt_delay+2]
+    mov pc, r14
 
 .end

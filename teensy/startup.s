@@ -61,13 +61,57 @@ _startup:
     ldr r0, =0x20
     str r0, [r6]
 
-    ldr fp, =_estack
+    ldr fp, =_estack // necessary?
 
+    // Zero out .data section. Not Strictly necessary, but I want to know if
+    // my data loading code below is broken, because it appears the
+    // bootloader sets up the RAM when programming, but of course the RAM is
+    // reset on power cycle. Clearing it out first hopefully should uncover
+    // this bug if it happens
+
+    ldr r5, =_sdata
+    ldr r0, =0
+    ldr r7, =_edata
+    b data_clear_skip
+    data_clear_loop:
+        str r0, [r5]
+        add r5, r5, #1
+        data_clear_skip:
+        cmp r5, r7
+        bne data_clear_loop
+
+    // load .data section from flash into RAM
+    ldr r6, =_sflashdata //src
+    ldr r5, =_sdata //dest
+    ldr r7, =_edata //end
+    b data_load_skip
+    data_load_loop:
+        ldr r0, [r6]
+        str r0, [r5]
+        add r5, r5, #1
+        add r6, r6, #1
+        data_load_skip:
+        cmp r5, r7
+        bne data_load_loop
+
+    // zero out .bss section
+    ldr r5, =_sbss
+    ldr r0, =0
+    ldr r7, =_ebss
+    b bss_clear_skip
+    bss_clear_loop:
+        str r0, [r5]
+        add r5, r5, #1
+        bss_clear_skip:
+        cmp r5, r7
+        bne bss_clear_loop
+
+    // Turn on LED
     //ldr r6, =0x400FF080
     //ldr r0, =0x20
     //str r0, [r6]
 
-    b main
+    bl main
     b _halt // Shouldn't ever get here
 
 //loop:

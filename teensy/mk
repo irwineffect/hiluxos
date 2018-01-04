@@ -10,3 +10,5 @@ echo "build complete"
 echo "ready to upload, press reset on Teensy"
 teensy_loader_cli -w --mcu=mk64fx512 build/kernel.hex
 arm-none-eabi-objdump -d  build/kernel.elf
+arm-none-eabi-nm build/kernel.elf
+arm-none-eabi-objdump -s -j .data build/kernel.elf

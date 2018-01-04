@@ -28,6 +28,8 @@
 .section ".startup","x",%progbits
 .thumb_func // Not sure why, but this is needed
 _startup:
+
+    // First, disable the watchdog timer
     cpsid i // Disable interrupts
 
     // unlock watchdog by writing 0xC520 followed by 0xD928
@@ -59,36 +61,45 @@ _startup:
     ldr r0, =0x20
     str r0, [r6]
 
-loop:
-    bl led_on
-    bl delay
-    bl led_off
-    bl delay
-    bl delay
-    bl delay
-    bl delay
-    bl delay
-    b loop
+    ldr fp, =_estack
 
-led_off:
-    ldr r6, =0x400FF080
-    ldr r0, =0x0
-    str r0, [r6]
-    mov pc, r14
+    //ldr r6, =0x400FF080
+    //ldr r0, =0x20
+    //str r0, [r6]
 
-led_on:
-    ldr r6, =0x400FF080
-    ldr r0, =0x20
-    str r0, [r6]
-    mov pc, r14
+    b main
+    b _halt // Shouldn't ever get here
 
-delay:
-    ldr r1, =0xA62A0
-    delay_loop:
-        sub r1, r1, #1
-        cmp r1, #0
-        bne delay_loop
-        mov pc, r14
+//loop:
+//    bl led_on
+//    bl delay
+//    bl led_off
+//    bl delay
+//    bl delay
+//    bl delay
+//    bl delay
+//    bl delay
+//    b loop
+//
+//led_off:
+//    ldr r6, =0x400FF080
+//    ldr r0, =0x0
+//    str r0, [r6]
+//    mov pc, r14
+//
+//led_on:
+//    ldr r6, =0x400FF080
+//    ldr r0, =0x20
+//    str r0, [r6]
+//    mov pc, r14
+//
+//delay:
+//    ldr r1, =0xA62A0
+//    delay_loop:
+//        sub r1, r1, #1
+//        cmp r1, #0
+//        bne delay_loop
+//        mov pc, r14
 
 _halt:
     b _halt

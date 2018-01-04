@@ -2,10 +2,11 @@
 rm build/* 2> /dev/null
 set -e
 echo "building"
-arm-none-eabi-as -g -mcpu=cortex-m4  -o build/blink.o blink.s
-arm-none-eabi-ld -T layout.ld -o build/blink.elf build/blink.o
-arm-none-eabi-objcopy -O ihex -R .eeprom build/blink.elf build/blink.hex
+arm-none-eabi-as -g -mcpu=cortex-m4 -mthumb  -o build/startup.o startup.s
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -nostdlib -o build/main.o -c main.c
+arm-none-eabi-ld -T layout.ld -o build/kernel.elf build/startup.o build/main.o
+arm-none-eabi-objcopy -O ihex -R .eeprom build/kernel.elf build/kernel.hex
 echo "build complete"
 echo "ready to upload, press reset on Teensy"
-teensy_loader_cli -w --mcu=mk64fx512 build/blink.hex
-#arm-none-eabi-objdump -d  build/blink.elf
+teensy_loader_cli -w --mcu=mk64fx512 build/kernel.hex
+arm-none-eabi-objdump -d  build/kernel.elf

@@ -16,7 +16,7 @@ set (LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/layout.ld")
 
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T ${LINKER_SCRIPT}")
 
-add_executable(kernel.elf layout.ld startup.s main.c debug_led.c)
+add_executable(kernel.elf layout.ld startup.s main.c debug_led.c pin_control.c)
 set_target_properties(kernel.elf PROPERTIES
     LINK_DEPENDS ${LINKER_SCRIPT})
 

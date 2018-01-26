@@ -7,7 +7,6 @@ const PORT port_a = {(void*) 0x40049000, (void*) 0x400FF000},
            port_d = {(void*) 0x4004C000, (void*) 0x400FF0C0},
            port_e = {(void*) 0x4004D000, (void*) 0x400FF100};
 
-
 void pin_set_mux(PORT *port, uint8_t pin, uint8_t mux)
 {
     // valid values for pin is 0-31d
@@ -18,6 +17,8 @@ void pin_set_mux(PORT *port, uint8_t pin, uint8_t mux)
         return;
     }
 
+    // first clear the mux value, then set it
+    port->pin_control_regs->pins[pin] &= ~(0b111 << 8);
     port->pin_control_regs->pins[pin] |= (mux << 8);
 }
 

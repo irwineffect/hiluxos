@@ -1,19 +1,25 @@
 #include "debug_led.h"
+#include "pin_control.h"
 #include <stdint.h>
 
 // Prepare the debug LED for use
 void debug_led_setup(void)
 {
     // Configure the LED pin
-    (*(volatile uint32_t*)0x4004B014) = 0x00000143;
+    //(*(volatile uint32_t*)0x4004B014) = 0x00000143;
     // Set the LED pin (PTC 5) to output
-    (*(volatile uint32_t*)0x400FF094) = 0x00000020;
+    //(*(volatile uint32_t*)0x400FF094) = 0x00000020;
+
+    pin_set_mux(&port_c, 5, 0b001);
+    pin_set_drive_strength(&port_c, 5, 1);
+    pin_set_data_direction(&port_c, 5, 1);
 }
 
 // Turn on or off the debug LED
 void debug_led(uint8_t state)
 {
-    (*(volatile uint32_t*)0x400FF080) = state ? 0x20 : 0;
+    //(*(volatile uint32_t*)0x400FF080) = state ? 0x20 : 0;
+    pin_write(&port_c, 5, (state ? 1 : 0));
 }
 
 // hcf: halt and catch fire

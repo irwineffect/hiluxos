@@ -30,10 +30,10 @@ extern const PORT port_a,
                   port_d,
                   port_e;
 
-void pin_set_mux(PORT *port, uint8_t pin, uint8_t mux);
-void pin_set_drive_strength(PORT *port, uint8_t pin, uint8_t drive);
-void pin_set_data_direction(PORT *port, uint8_t pin, uint8_t out_nin);
-uint8_t pin_read(PORT *port, uint8_t pin);
-void pin_write(PORT *port, uint8_t pin, uint8_t state);
+void pin_set_mux(const PORT *port, uint8_t pin, uint8_t mux);
+void pin_set_drive_strength(const PORT *port, uint8_t pin, uint8_t drive);
+void pin_set_data_direction(const PORT *port, uint8_t pin, uint8_t out_nin);
+uint8_t pin_read(const PORT *port, uint8_t pin);
+void pin_write(const PORT *port, uint8_t pin, uint8_t state);
 
 #endif

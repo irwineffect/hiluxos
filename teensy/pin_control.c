@@ -7,7 +7,7 @@ const PORT port_a = {(void*) 0x40049000, (void*) 0x400FF000},
            port_d = {(void*) 0x4004C000, (void*) 0x400FF0C0},
            port_e = {(void*) 0x4004D000, (void*) 0x400FF100};
 
-void pin_set_mux(PORT *port, uint8_t pin, uint8_t mux)
+void pin_set_mux(const PORT *port, uint8_t pin, uint8_t mux)
 {
     // valid values for pin is 0-31d
     // valid values for mux is 0-111b
@@ -22,7 +22,7 @@ void pin_set_mux(PORT *port, uint8_t pin, uint8_t mux)
     port->pin_control_regs->pins[pin] |= (mux << 8);
 }
 
-void pin_set_drive_strength(PORT *port, uint8_t pin, uint8_t
+void pin_set_drive_strength(const PORT *port, uint8_t pin, uint8_t
         drive)
 {
     // valid values for pin is 0-31d
@@ -47,7 +47,7 @@ void pin_set_drive_strength(PORT *port, uint8_t pin, uint8_t
     }
 }
 
-void pin_set_data_direction(PORT *port, uint8_t pin, uint8_t out_nin)
+void pin_set_data_direction(const PORT *port, uint8_t pin, uint8_t out_nin)
 {
     // valid values for pin is 0-31d
     if (pin >= 32)
@@ -72,7 +72,7 @@ void pin_set_data_direction(PORT *port, uint8_t pin, uint8_t out_nin)
     }
 }
 
-uint8_t pin_read(PORT *port, uint8_t pin)
+uint8_t pin_read(const PORT *port, uint8_t pin)
 {
     // valid values for pin is 0-31d
     if (pin >= 32)
@@ -91,7 +91,7 @@ uint8_t pin_read(PORT *port, uint8_t pin)
     }
 }
 
-void pin_write(PORT *port, uint8_t pin, uint8_t state)
+void pin_write(const PORT *port, uint8_t pin, uint8_t state)
 {
     // valid values for pin is 0-31d
     if (pin >= 32)

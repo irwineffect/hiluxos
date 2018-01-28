@@ -9,6 +9,7 @@ SECTIONS {
         KEEP(*(.vectors))
         . = 0x400;
         KEEP(*(.flashconfig*))
+        *(.handlers*)
         *(.startup*)
         *(.text*)
         *(.rodata*)

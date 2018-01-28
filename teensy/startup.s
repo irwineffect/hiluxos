@@ -100,11 +100,6 @@ _startup:
     bl main
     b _halt // Shouldn't ever get here
 
-.thumb_func
-_svcall_handler:
-    bl debug_led_setup
-    ldr r0, =0x02
-    bl debug_led_hcf
 
 .thumb_func
 _halt:

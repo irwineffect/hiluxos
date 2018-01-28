@@ -1,23 +1,23 @@
 .syntax unified
+.global _halt
 
 .section ".vectors"
-.long _estack  // IRQ  0: Inital Stack Pointer
-.long _startup // IRQ  1: Inital Program Counter
-.long _halt    // IRQ  2: Non-maskable Interrupt (NMI)
-.long _halt    // IRQ  3: Hard Fault
-.long _halt    // IRQ  4: MemManage Fault
-.long _halt    // IRQ  5: Bus Fault
-.long _halt    // IRQ  6: Usage Fault
-.long _halt    // IRQ  7:
-.long _halt    // IRQ  8:
-.long _halt    // IRQ  9:
-.long _halt    // IRQ 10:
-.long _halt    // IRQ 11: Supervisor Call (SVCall)
-.long _halt    // IRQ 12:
-.long _halt    // IRQ 13:
-.long _halt    // IRQ 14:
-.long _halt    // IRQ 15: System Tick Timer (SysTick)
-
+.long _estack             // IRQ  0: Inital Stack Pointer
+.long _startup            // IRQ  1: Inital Program Counter
+.long _halt               // IRQ  2: Non-maskable Interrupt (NMI)
+.long _halt               // IRQ  3: Hard Fault
+.long _halt               // IRQ  4: MemManage Fault
+.long _halt               // IRQ  5: Bus Fault
+.long _halt               // IRQ  6: Usage Fault
+.long _halt               // IRQ  7:
+.long _halt               // IRQ  8:
+.long _halt               // IRQ  9:
+.long _halt               // IRQ 10:
+.long _svcall_handler     // IRQ 11: Supervisor Call (SVCall)
+.long _halt               // IRQ 12:
+.long _halt               // IRQ 13:
+.long _halt               // IRQ 14:
+.long _halt               // IRQ 15: System Tick Timer (SysTick)
 
 .section ".flashconfig"
 .long 0xFFFFFFFF
@@ -100,7 +100,13 @@ _startup:
     bl main
     b _halt // Shouldn't ever get here
 
+.thumb_func
+_svcall_handler:
+    bl debug_led_setup
+    ldr r0, =0x02
+    bl debug_led_hcf
 
+.thumb_func
 _halt:
     // Configure the LED pin
     ldr r6, =0x4004B014

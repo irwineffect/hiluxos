@@ -22,10 +22,12 @@ add_executable(kernel.elf layout.ld startup.s handlers.s main.c ${PERIPHERIAL_FI
 set_target_properties(kernel.elf PROPERTIES
     LINK_DEPENDS ${LINKER_SCRIPT})
 
-add_custom_target(upload
-    DEPENDS kernel.elf
+add_custom_command(OUTPUT kernel.hex
+    MAIN_DEPENDENCY kernel.elf
     COMMAND arm-none-eabi-objcopy -O ihex -R .eeprom kernel.elf kernel.hex
-    #COMMAND echo "ready to upload, press reset on Teensy"
+)
+add_custom_target(upload
+    DEPENDS kernel.hex
     COMMAND teensy_loader_cli -v -w --mcu=mk64fx512 kernel.hex
 )
 

@@ -11,7 +11,7 @@ set (CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}g++)
 set (CPU "-mcpu=cortex-m4")
 set (CMAKE_ASM_FLAGS "-mthumb ${CPU}")
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -mthumb ${CPU} -nostdlib")
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -mthumb ${CPU} -fno-exceptions -fno-unwind-tables -fno-rtti")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -mthumb ${CPU} -fno-exceptions -fno-unwind-tables -fno-rtti -nostdlib")
 
 # These lines suppress CMake from adding the -rdynamic flag
 set (CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
@@ -24,6 +24,7 @@ set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T ${LINKER_SCRIPT}")
 set (PERIPHERIAL_FILES debug.cpp pin_control.cpp uart.cpp)
 
 add_executable(kernel.elf layout.ld startup.s handlers.s main.cpp ${PERIPHERIAL_FILES})
+target_link_libraries(kernel.elf c gcc)
 set_target_properties(kernel.elf PROPERTIES
     LINK_DEPENDS ${LINKER_SCRIPT})
 

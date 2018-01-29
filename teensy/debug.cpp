@@ -13,6 +13,8 @@ void debug_init(void)
 
     // Configure UART serial port
     uart_setup(&uart_0);
+
+    dbprint("\ndbprint initialized\n");
 }
 
 void dbprint(const char *s)

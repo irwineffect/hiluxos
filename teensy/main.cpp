@@ -2,11 +2,37 @@
 #include "debug.h"
 #include "uart.h"
 
+void __attribute__((section(".mysection"))) ramtest(void)
+{
+    debug_led_hcf(1);
+}
+
+class a
+{
+    public:
+        a(void)
+        {
+            dbprint("creating a\n");
+        }
+
+        ~a(void)
+        {
+            dbprint("destroying a\n");
+        }
+
+        void use(void)
+        {
+            dbprint("using a\n");
+        }
+};
+
+a mclass;
 int main (void)
 {
     uint32_t j;
+    mclass.use();
 
-    while(1)
+    //while(1)
     {
         debug_led(1);
         dbprint("hello world\n");

@@ -38,5 +38,28 @@ SECTIONS {
         __bss_end__ = .;
     } > RAM
 
+	.init.array :
+    {
+        __init_array_start = .;
+        *(.init_array)
+        *(.init_array.*)
+        __init_array_end = .;
+    } > FLASH
+
+    .blah :
+    {
+        *(.mysection)
+    } > FLASH
+
+    /*
+    .init.array :
+    {
+        __init_array_start = .;
+        *(init_array)
+        *(.init_array.*)
+        __init_array_end = .;
+    } > FLASH
+    */
+
     _estack = ORIGIN(RAM) + LENGTH(RAM); /* stack pointer start */
 }

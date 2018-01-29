@@ -1,24 +1,29 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-project (hiluxos C ASM)
+project (hiluxos CXX ASM)
 
 set (CMAKE_SYSTEM_NAME Generic)
 set (CMAKE_SYSTEM_PROCESSOR arm)
 set (TOOLCHAIN_PREFIX arm-none-eabi-)
 set (CMAKE_ASM_COMPILER ${TOOLCHAIN_PREFIX}as)
 set (CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}gcc)
+set (CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}g++)
 
 set (CPU "-mcpu=cortex-m4")
 set (CMAKE_ASM_FLAGS "-mthumb ${CPU}")
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -mthumb ${CPU} -nostdlib")
-set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -mthumb ${CPU} -fno-exceptions -fno-unwind-tables -fno-rtti")
+
+# These lines suppress CMake from adding the -rdynamic flag
+set (CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
+set (CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 
 set (LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/layout.ld")
 
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T ${LINKER_SCRIPT}")
 
-set (PERIPHERIAL_FILES debug.c pin_control.c uart.c)
+set (PERIPHERIAL_FILES debug.cpp pin_control.cpp uart.cpp)
 
-add_executable(kernel.elf layout.ld startup.s handlers.s main.c ${PERIPHERIAL_FILES})
+add_executable(kernel.elf layout.ld startup.s handlers.s main.cpp ${PERIPHERIAL_FILES})
 set_target_properties(kernel.elf PROPERTIES
     LINK_DEPENDS ${LINKER_SCRIPT})
 

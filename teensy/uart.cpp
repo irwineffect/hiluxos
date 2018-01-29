@@ -3,8 +3,8 @@
 #include "pin_control.h"
 #include "debug.h"
 
-const UART uart_0 = {(void*) 0x4006A000},
-           uart_1 = {(void*) 0x4006B000};
+const UART uart_0 = {reinterpret_cast<UART_CONTROL_REGISTERS*>(0x4006A000)},
+           uart_1 = {reinterpret_cast<UART_CONTROL_REGISTERS*>(0x4006B000)};
 
 void uart_setup(const UART *u)
 {

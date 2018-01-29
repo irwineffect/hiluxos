@@ -1,11 +1,20 @@
 #include "pin_control.h"
 #include <stdint.h>
 
-const PORT port_a = {(void*) 0x40049000, (void*) 0x400FF000},
-           port_b = {(void*) 0x4004A000, (void*) 0x400FF040},
-           port_c = {(void*) 0x4004B000, (void*) 0x400FF080},
-           port_d = {(void*) 0x4004C000, (void*) 0x400FF0C0},
-           port_e = {(void*) 0x4004D000, (void*) 0x400FF100};
+const PORT port_a = {reinterpret_cast<PIN_CONTROL_REGISTER_MAP*>(0x40049000),
+                     reinterpret_cast<GPIO_REGISTER_MAP*>(0x400FF000)},
+
+           port_b = {reinterpret_cast<PIN_CONTROL_REGISTER_MAP*>(0x4004A000),
+                     reinterpret_cast<GPIO_REGISTER_MAP*>(0x400FF040)},
+
+           port_c = {reinterpret_cast<PIN_CONTROL_REGISTER_MAP*>(0x4004B000),
+                     reinterpret_cast<GPIO_REGISTER_MAP*>(0x400FF080)},
+
+           port_d = {reinterpret_cast<PIN_CONTROL_REGISTER_MAP*>(0x4004C000),
+                     reinterpret_cast<GPIO_REGISTER_MAP*>(0x400FF0C0)},
+
+           port_e = {reinterpret_cast<PIN_CONTROL_REGISTER_MAP*>(0x4004D000),
+                     reinterpret_cast<GPIO_REGISTER_MAP*>(0x400FF100)};
 
 void pin_set_mux(const PORT *port, uint8_t pin, uint8_t mux)
 {

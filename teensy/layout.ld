@@ -30,10 +30,12 @@ SECTIONS {
     .bss : {
         . = ALIGN(8);
         _sbss = .;
+        __bss_start__ = .;
         *(.bss*)
         *(COMMON)
         . = ALIGN(8);
         _ebss = .;
+        __bss_end__ = .;
     } > RAM
 
     _estack = ORIGIN(RAM) + LENGTH(RAM); /* stack pointer start */

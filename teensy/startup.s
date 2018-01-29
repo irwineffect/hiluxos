@@ -1,5 +1,6 @@
 .syntax unified
 .global _halt
+.global _exit
 
 .section ".vectors"
 .long _estack                  // IRQ  0: Inital Stack Pointer
@@ -103,6 +104,8 @@ _startup:
     bl main
     b _halt // Shouldn't ever get here
 
+_exit:
+    b _halt
 
 .thumb_func
 _halt:

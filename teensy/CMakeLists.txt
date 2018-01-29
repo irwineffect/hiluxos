@@ -23,7 +23,7 @@ set_target_properties(kernel.elf PROPERTIES
     LINK_DEPENDS ${LINKER_SCRIPT})
 
 add_custom_command(OUTPUT kernel.hex
-    MAIN_DEPENDENCY kernel.elf
+    DEPENDS kernel.elf
     COMMAND arm-none-eabi-objcopy -O ihex -R .eeprom kernel.elf kernel.hex
 )
 add_custom_target(upload

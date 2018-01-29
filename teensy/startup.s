@@ -2,22 +2,22 @@
 .global _halt
 
 .section ".vectors"
-.long _estack             // IRQ  0: Inital Stack Pointer
-.long _startup            // IRQ  1: Inital Program Counter
-.long _halt               // IRQ  2: Non-maskable Interrupt (NMI)
-.long _halt               // IRQ  3: Hard Fault
-.long _halt               // IRQ  4: MemManage Fault
-.long _halt               // IRQ  5: Bus Fault
-.long _halt               // IRQ  6: Usage Fault
-.long _halt               // IRQ  7:
-.long _halt               // IRQ  8:
-.long _halt               // IRQ  9:
-.long _halt               // IRQ 10:
-.long _svcall_handler     // IRQ 11: Supervisor Call (SVCall)
-.long _halt               // IRQ 12:
-.long _halt               // IRQ 13:
-.long _halt               // IRQ 14:
-.long _halt               // IRQ 15: System Tick Timer (SysTick)
+.long _estack                  // IRQ  0: Inital Stack Pointer
+.long _startup                 // IRQ  1: Inital Program Counter
+.long _nmi_handler             // IRQ  2: Non-maskable Interrupt (NMI)
+.long _hardfault_handler       // IRQ  3: Hard Fault
+.long _memmanage_fault_handler // IRQ  4: MemManage Fault
+.long _bus_fault_handler       // IRQ  5: Bus Fault
+.long _usage_fault_handler     // IRQ  6: Usage Fault
+.long _halt                    // IRQ  7:
+.long _halt                    // IRQ  8:
+.long _halt                    // IRQ  9:
+.long _halt                    // IRQ 10:
+.long _svcall_handler          // IRQ 11: Supervisor Call (SVCall)
+.long _halt                    // IRQ 12:
+.long _halt                    // IRQ 13:
+.long _halt                    // IRQ 14:
+.long _systick_handler         // IRQ 15: System Tick Timer (SysTick)
 
 .section ".flashconfig"
 .long 0xFFFFFFFF

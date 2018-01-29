@@ -1,7 +1,7 @@
 #include "uart.h"
 #include <stdint.h>
 #include "pin_control.h"
-#include "debug_led.h"
+#include "debug.h"
 
 const UART uart_0 = {(void*) 0x4006A000},
            uart_1 = {(void*) 0x4006B000};
@@ -42,13 +42,13 @@ void uart_setup(const UART *u)
     return;
 }
 
-void uart_putc(const UART *u, char c)
+void uart_putc(const UART *u, const char c)
 {
     while((u->reg->S1 & (1 << 7)) == 0);
     u->reg->data = c;
 }
 
-void uart_prints(const UART *u, char *s)
+void uart_prints(const UART *u, const char *s)
 {
     while(*s != '\0')
     {

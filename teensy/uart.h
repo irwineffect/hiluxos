@@ -31,7 +31,7 @@ typedef struct UART_struct
 extern const UART uart_0, uart_1;
 
 void uart_setup(const UART *u);
-void uart_putc(const UART *u, char c);
-void uart_prints(const UART *u, char *s);
+void uart_putc(const UART *u, const char c);
+void uart_prints(const UART *u, const char *s);
 
 #endif

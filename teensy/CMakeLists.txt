@@ -16,7 +16,7 @@ set (LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/layout.ld")
 
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T ${LINKER_SCRIPT}")
 
-set (PERIPHERIAL_FILES debug_led.c pin_control.c uart.c)
+set (PERIPHERIAL_FILES debug.c pin_control.c uart.c)
 
 add_executable(kernel.elf layout.ld startup.s handlers.s main.c ${PERIPHERIAL_FILES})
 set_target_properties(kernel.elf PROPERTIES

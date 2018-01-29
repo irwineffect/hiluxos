@@ -96,6 +96,9 @@ _startup:
         cmp r5, r7
         bne bss_clear_loop
 
+    // Initialize debug functionality
+    bl debug_init
+
     // Jump to kernel main
     bl main
     b _halt // Shouldn't ever get here

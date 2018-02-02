@@ -21,7 +21,7 @@ set (LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/layout.ld")
 
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T ${LINKER_SCRIPT}")
 
-set (PERIPHERIAL_FILES debug.cpp pin_control.cpp uart.cpp)
+set (PERIPHERIAL_FILES debug.cpp pin_control.cpp uart.cpp printf.cpp)
 
 add_executable(kernel.elf layout.ld startup.s handlers.s main.cpp ${PERIPHERIAL_FILES})
 target_link_libraries(kernel.elf c gcc)
@@ -34,6 +34,7 @@ add_custom_command(OUTPUT kernel.hex
 )
 add_custom_target(upload
     DEPENDS kernel.hex
+    COMMAND python ${PROJECT_SOURCE_DIR}/../reset/reset.py
     COMMAND teensy_loader_cli -v -w --mcu=mk64fx512 kernel.hex
 )
 

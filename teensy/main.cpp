@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "debug.h"
 #include "uart.h"
+#include "printf.h"
 
 void __attribute__((section(".mysection"))) ramtest(void)
 {
@@ -32,10 +33,11 @@ int main (void)
     uint32_t j;
     mclass.use();
 
-    //while(1)
+    while(1)
     {
         debug_led(1);
-        dbprint("hello world\n");
+        //printf("hello %d world\n", 123456);
+        dbprint("hey world\n");
         debug_led(0);
         for (j = 0; j < 0x1FFFFF; ++j);
     }

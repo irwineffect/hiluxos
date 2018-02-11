@@ -1,7 +1,7 @@
 #include "debug.h"
 #include "pin_control.h"
 #include "uart.h"
-#include <stdint.h>
+#include <cstdint>
 
 // Prepare the debug LED and UART port for use
 void debug_init(void)

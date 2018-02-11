@@ -10,8 +10,8 @@ set (CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}g++)
 
 set (CPU "-mcpu=cortex-m4")
 set (CMAKE_ASM_FLAGS "-mthumb ${CPU}")
-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -mthumb ${CPU} -nostdlib")
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -mthumb ${CPU} -fno-exceptions -fno-unwind-tables -fno-rtti -nostdlib")
+#set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -mthumb ${CPU} -nostdlib")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Werror -mthumb ${CPU} -fno-exceptions -fno-unwind-tables -fno-rtti -nostdlib")
 
 # These lines suppress CMake from adding the -rdynamic flag
 set (CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")

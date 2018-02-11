@@ -1,7 +1,7 @@
 #ifndef DEBUG_LED_H
 #define DEBUG_LED_H
 
-#include <stdint.h>
+#include <cstdint>
 
 
 extern "C" void debug_init(void);

@@ -1,5 +1,5 @@
 #include "uart.h"
-#include <stdint.h>
+#include <cstdint>
 #include "pin_control.h"
 #include "debug.h"
 

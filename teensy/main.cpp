@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <cstdint>
 #include "debug.h"
 #include "uart.h"
 #include "printf.h"

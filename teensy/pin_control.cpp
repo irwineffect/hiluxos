@@ -1,5 +1,5 @@
 #include "pin_control.h"
-#include <stdint.h>
+#include <cstdint>
 
 const PORT port_a = {reinterpret_cast<PIN_CONTROL_REGISTER_MAP*>(0x40049000),
                      reinterpret_cast<GPIO_REGISTER_MAP*>(0x400FF000)},

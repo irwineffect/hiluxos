@@ -7,8 +7,9 @@
 
 int main (void)
 {
-   clock_control.enable_peripherals();
-   spi_0.init();
+    clock_control.enable_peripherals();
+    uart_0.init();
+    spi_0.init();
 
     while(1)
     {

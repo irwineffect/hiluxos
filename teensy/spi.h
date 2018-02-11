@@ -1,14 +1,14 @@
 #ifndef SPI_H
 #define SPI_H
+
 #include "printf.h"
+#include <cstdint>
 
 class spi
 {
     public:
         spi(uint32_t base_addr) :
-            regs(reinterpret_cast<struct register_map*>(base_addr))
-    {
-    }
+            regs(reinterpret_cast<struct register_map*>(base_addr)) {}
 
         void init();
         void send_byte(const uint8_t b);

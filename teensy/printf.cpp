@@ -3,15 +3,17 @@
 #include "debug.h"
 #include "printf.h"
 
-const char *table = "0123456789ABCDEF";
+static const char *table = "0123456789ABCDEF";
+
+static uart &printf_uart = uart_0;
 
 void putc(const char c)
 {
-    uart_putc(&uart_0, c);
+    printf_uart.putc(c);
 }
 void puts(const char *s)
 {
-    uart_prints(&uart_0, s);
+    printf_uart.puts(s);
 }
 
 void rpu(uint32_t x, uint8_t base)
@@ -91,7 +93,7 @@ void printf(const char* fmt, ...)
                     put_hex(va_arg(args, uint32_t));
                     break;
                 default:
-                    dbprint("error: unknown format specifier!\n");
+                    //dbprint("error: unknown format specifier!\n");
                     debug_led_hcf(1);
                     break;
             }

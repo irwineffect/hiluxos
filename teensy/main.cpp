@@ -2,44 +2,20 @@
 #include "debug.h"
 #include "uart.h"
 #include "printf.h"
+#include "spi.h"
+#include "clocks.h"
 
-void __attribute__((section(".mysection"))) ramtest(void)
-{
-    debug_led_hcf(1);
-}
-
-class a
-{
-    public:
-        a(void)
-        {
-            dbprint("creating a\n");
-        }
-
-        ~a(void)
-        {
-            dbprint("destroying a\n");
-        }
-
-        void use(void)
-        {
-            dbprint("using a\n");
-        }
-};
-
-a mclass;
 int main (void)
 {
-    uint32_t j;
-    mclass.use();
+   clock_control.enable_peripherals();
+   spi_0.init();
 
     while(1)
     {
         debug_led(1);
-        //printf("hello %d world\n", 123456);
-        dbprint("hey world\n");
+        printf("in main while loop\n");
         debug_led(0);
-        for (j = 0; j < 0x1FFFFF; ++j);
+        for (uint32_t j = 0; j < 0x1FFFFF; ++j);
     }
 
     return 0;

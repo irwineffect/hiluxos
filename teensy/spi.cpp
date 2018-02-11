@@ -1,20 +1,23 @@
 #include <stdint.h>
 #include "spi.h"
 
-namespace SPI
+// create instances
+spi spi_0(0x4002C000);
+
+void spi::init()
 {
-    const SPI spi_0 = {reinterpret_cast<register_map*>(0x4002C000)};
+    // set master mode
+    regs->MCR = (1 << 31);
 
-    void setup(const SPI *s)
-    {
-        s->reg->MCR = (1 << 31) | (1 << 13) | (1 << 12);
+    // disable tx/rx fifos
+    regs->MCR |= (1 << 13) | (1 << 12);
 
+    // TODO: Setup pins
+}
 
-    }
+void spi::send_byte(const uint8_t b)
+{
+    while((regs->SR & (1 << 25)) == 0);
+    regs->PUSHR = b;
+}
 
-    void send_byte(const SPI *s, const uint8_t b)
-    {
-
-    }
-
-};

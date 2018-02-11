@@ -2,6 +2,7 @@
 .global _halt
 .global _exit
 .global __dso_handle
+.global _init
 
 .section ".vectors"
 .long _estack                  // IRQ  0: Inital Stack Pointer
@@ -102,17 +103,7 @@ _startup:
     bl debug_init
 
     // Initialize C++ junk
-    ldr r0, =__init_array_start
-    ldr r1, =__init_array_end
-
-    globals_init_loop:
-        cmp r0, r1
-        bge globals_init_exit
-        ldr r2, [r0], #4
-        blx r2
-        b globals_init_loop
-    globals_init_exit:
-
+    bl __libc_init_array
 
     // Jump to kernel main
     bl main
@@ -122,6 +113,8 @@ _exit:
     b _halt
 __dso_handle:
     b _halt
+_init:
+    mov pc, r14
 
 .thumb_func
 _halt:

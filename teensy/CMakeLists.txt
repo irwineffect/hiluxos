@@ -21,7 +21,7 @@ set (LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/layout.ld")
 
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T ${LINKER_SCRIPT}")
 
-set (PERIPHERIAL_FILES debug.cpp pin_control.cpp uart.cpp printf.cpp)
+set (PERIPHERIAL_FILES debug.cpp pin_control.cpp uart.cpp printf.cpp spi.cpp)
 
 add_executable(kernel.elf layout.ld startup.s handlers.s main.cpp ${PERIPHERIAL_FILES})
 target_link_libraries(kernel.elf c gcc)

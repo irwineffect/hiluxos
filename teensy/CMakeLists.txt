@@ -32,10 +32,17 @@ add_custom_command(OUTPUT kernel.hex
     DEPENDS kernel.elf
     COMMAND arm-none-eabi-objcopy -O ihex -R .eeprom kernel.elf kernel.hex
 )
+
 add_custom_target(upload
     DEPENDS kernel.hex
     COMMAND python ${PROJECT_SOURCE_DIR}/../reset/reset.py
     COMMAND teensy_loader_cli -v -w --mcu=mk64fx512 kernel.hex
+)
+
+add_custom_target(remote-upload
+    DEPENDS kernel.hex
+    COMMAND rsync kernel.hex oryx:Repos/hiluxos/teensy/build
+    COMMAND ssh oryx /home/james/bin/remote-teensy-upload.sh
 )
 
 add_custom_target(dump

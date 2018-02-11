@@ -37,6 +37,17 @@ void put_unsigned_int(uint32_t u)
     }
 }
 
+void put_hex(uint32_t u)
+{
+    if (u == 0)
+    {
+        putc('0');
+    }
+    else
+    {
+        rpu(u, 16);
+    }
+}
 void put_signed_int(int32_t i)
 {
     if ( i < 0 )
@@ -77,7 +88,7 @@ void printf(const char* fmt, ...)
                     put_signed_int(va_arg(args, int32_t));
                     break;
                 case 'x':
-                    put_unsigned_int(va_arg(args, uint32_t));
+                    put_hex(va_arg(args, uint32_t));
                     break;
                 default:
                     dbprint("error: unknown format specifier!\n");

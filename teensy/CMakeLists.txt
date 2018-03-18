@@ -28,6 +28,7 @@ set (PERIPHERIAL_FILES
     printf.cpp
     spi.cpp
     clocks.cpp
+    rtc.cpp
 )
 
 add_executable(kernel.elf layout.ld startup.s handlers.s main.cpp ${PERIPHERIAL_FILES})

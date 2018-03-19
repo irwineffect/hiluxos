@@ -6,8 +6,8 @@ rtc rtc_control;
 
 void rtc::init()
 {
-    // check if the RTC is already enabled. If it is not running, start it.
-    if ((regs->SR & (1 << 4)) == 0)
+    // check if the RTC time is invalid, if it is, initialize the RTC
+    if ((regs->SR & (1 << 0)) != 0)
     {
         regs->CR |= (1 << 8); // enable the 32 kHz oscillator
         // wait for oscillator to stabilize
@@ -48,7 +48,7 @@ struct rtc::time rtc::get_time(void)
     current_time.minutes = raw_time % 60;
     raw_time /= 60;
 
-    current_time.minutes = raw_time % 24;
+    current_time.hours = raw_time % 24;
 
     return current_time;
 }

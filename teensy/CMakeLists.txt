@@ -29,6 +29,7 @@ set (PERIPHERIAL_FILES
     spi.cpp
     clocks.cpp
     rtc.cpp
+    interrupt_timer.cpp
 )
 
 add_executable(kernel.elf layout.ld startup.s handlers.s main.cpp ${PERIPHERIAL_FILES})

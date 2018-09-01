@@ -5,22 +5,108 @@
 .global _init
 
 .section ".vectors"
-.long _estack                  // IRQ  0: Inital Stack Pointer
-.long _startup                 // IRQ  1: Inital Program Counter
-.long _nmi_handler             // IRQ  2: Non-maskable Interrupt (NMI)
-.long _hardfault_handler       // IRQ  3: Hard Fault
-.long _memmanage_fault_handler // IRQ  4: MemManage Fault
-.long _bus_fault_handler       // IRQ  5: Bus Fault
-.long _usage_fault_handler     // IRQ  6: Usage Fault
-.long _halt                    // IRQ  7:
-.long _halt                    // IRQ  8:
-.long _halt                    // IRQ  9:
-.long _halt                    // IRQ 10:
-.long _svcall_handler          // IRQ 11: Supervisor Call (SVCall)
-.long _halt                    // IRQ 12:
-.long _halt                    // IRQ 13:
-.long _halt                    // IRQ 14:
-.long _systick_handler         // IRQ 15: System Tick Timer (SysTick)
+.long _estack                      //   0: Inital Stack Pointer
+.long _startup                     //   1: Inital Program Counter
+.long _nmi_handler                 //   2: Non-maskable Interrupt (NMI)
+.long _hardfault_handler           //   3: Hard Fault
+.long _memmanage_fault_handler     //   4: MemManage Fault
+.long _bus_fault_handler           //   5: Bus Fault
+.long _usage_fault_handler         //   6: Usage Fault
+.long _halt                        //   7:
+.long _halt                        //   8:
+.long _halt                        //   9:
+.long _halt                        //  10:
+.long _svcall_handler              //  11: Supervisor Call (SVCall)
+.long _halt                        //  12:
+.long _halt                        //  13:
+.long _halt                        //  14:
+.long _systick_handler             //  15: System Tick Timer (SysTick)
+.long _halt                        //  16: DMA  0 transfer complete
+.long _halt                        //  17: DMA  1 transfer complete
+.long _halt                        //  18: DMA  2 transfer complete
+.long _halt                        //  19: DMA  3 transfer complete
+.long _halt                        //  20: DMA  4 transfer complete
+.long _halt                        //  21: DMA  5 transfer complete
+.long _halt                        //  22: DMA  6 transfer complete
+.long _halt                        //  23: DMA  7 transfer complete
+.long _halt                        //  24: DMA  8 transfer complete
+.long _halt                        //  25: DMA  9 transfer complete
+.long _halt                        //  26: DMA 10 transfer complete
+.long _halt                        //  27: DMA 11 transfer complete
+.long _halt                        //  28: DMA 12 transfer complete
+.long _halt                        //  29: DMA 13 transfer complete
+.long _halt                        //  30: DMA 14 transfer complete
+.long _halt                        //  31: DMA 15 transfer complete
+.long _halt                        //  32:
+.long _halt                        //  33:
+.long _halt                        //  34:
+.long _halt                        //  35:
+.long _halt                        //  36:
+.long _halt                        //  37:
+.long _halt                        //  38:
+.long _halt                        //  39:
+.long _halt                        //  40:
+.long _halt                        //  41:
+.long _halt                        //  42:
+.long _halt                        //  43:
+.long _halt                        //  44:
+.long _halt                        //  45:
+.long _halt                        //  46:
+.long _halt                        //  47:
+.long _halt                        //  48:
+.long _halt                        //  49:
+.long _halt                        //  50:
+.long _halt                        //  51:
+.long _halt                        //  52:
+.long _halt                        //  53:
+.long _halt                        //  54:
+.long _halt                        //  55:
+.long _halt                        //  56:
+.long _halt                        //  57:
+.long _halt                        //  58:
+.long _halt                        //  59:
+.long _halt                        //  60:
+.long _halt                        //  61:
+.long _halt                        //  62:
+.long _halt                        //  63:
+.long _interrupt_timer_0_handler   //  64: Interrupt timer 0
+.long _interrupt_timer_1_handler   //  65: Interrupt timer 1
+.long _interrupt_timer_2_handler   //  66: Interrupt timer 2
+.long _interrupt_timer_3_handler   //  67: Interrupt timer 3
+.long _halt                        //  68:
+.long _halt                        //  69:
+.long _halt                        //  70:
+.long _halt                        //  71:
+.long _halt                        //  72:
+.long _halt                        //  73:
+.long _halt                        //  74:
+.long _halt                        //  75:
+.long _halt                        //  76:
+.long _halt                        //  77:
+.long _halt                        //  78:
+.long _halt                        //  79:
+.long _halt                        //  80:
+.long _halt                        //  81:
+.long _halt                        //  82:
+.long _halt                        //  83:
+.long _halt                        //  84:
+.long _halt                        //  85:
+.long _halt                        //  86:
+.long _halt                        //  87:
+.long _halt                        //  88:
+.long _halt                        //  89:
+.long _halt                        //  90:
+.long _halt                        //  91:
+.long _halt                        //  92:
+.long _halt                        //  93:
+.long _halt                        //  94:
+.long _halt                        //  95:
+.long _halt                        //  96:
+.long _halt                        //  97:
+.long _halt                        //  98:
+.long _halt                        //  99:
+.long _halt                        //  100:
+.long _halt                        //  101:
 
 .section ".flashconfig"
 .long 0xFFFFFFFF

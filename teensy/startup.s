@@ -69,10 +69,10 @@
 .long _halt                        //  61:
 .long _halt                        //  62:
 .long _halt                        //  63:
-.long _interrupt_timer_0_handler   //  64: Interrupt timer 0
-.long _interrupt_timer_1_handler   //  65: Interrupt timer 1
-.long _interrupt_timer_2_handler   //  66: Interrupt timer 2
-.long _interrupt_timer_3_handler   //  67: Interrupt timer 3
+.long ISR_interrupt_timer_0        //  64: Interrupt timer 0
+.long ISR_interrupt_timer_1        //  65: Interrupt timer 1
+.long ISR_interrupt_timer_2        //  66: Interrupt timer 2
+.long ISR_interrupt_timer_3        //  67: Interrupt timer 3
 .long _halt                        //  68:
 .long _halt                        //  69:
 .long _halt                        //  70:

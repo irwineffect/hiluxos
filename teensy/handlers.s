@@ -8,10 +8,6 @@
 .global _usage_fault_handler
 .global _svcall_handler
 .global _systick_handler
-.global _interrupt_timer_0_handler
-.global _interrupt_timer_1_handler
-.global _interrupt_timer_2_handler
-.global _interrupt_timer_3_handler
 
 // All interrupt handlers go here
 .section ".handlers","x",%progbits
@@ -57,38 +53,5 @@ _systick_handler:
     bl debug_init
     ldr r0, =15
     bl debug_led_hcf
-
-.thumb_func
-_interrupt_timer_0_handler:
-    //push lr to the stack
-    STMFD sp, {lr}
-    bl ISR_interrupt_timer_0
-    LDMFD sp, {lr}
-    mov pc, lr
-
-.thumb_func
-_interrupt_timer_1_handler:
-    //push lr to the stack
-    STMFD sp, {lr}
-    bl ISR_interrupt_timer_1
-    LDMFD sp, {lr}
-    mov pc, lr
-
-.thumb_func
-_interrupt_timer_2_handler:
-    //push lr to the stack
-    STMFD sp, {lr}
-    bl ISR_interrupt_timer_2
-    LDMFD sp, {lr}
-    mov pc, lr
-
-.thumb_func
-_interrupt_timer_3_handler:
-    //push lr to the stack
-    STMFD sp, {lr}
-    bl ISR_interrupt_timer_3
-    LDMFD sp, {lr}
-    mov pc, lr
-
 
 .end

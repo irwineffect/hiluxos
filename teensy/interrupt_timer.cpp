@@ -51,6 +51,11 @@ void interrupt_timer::set_value(uint32_t value)
     regs->LDVAL = value;
 }
 
+uint32_t interrupt_timer::get_value(void)
+{
+    return regs->CVAL;
+}
+
 void interrupt_timer::enable_interrupt(uint8_t enable)
 {
     if (enable == 0)
@@ -83,4 +88,5 @@ void interrupt_timer::register_callback(void(*_user_callback)(void))
 void interrupt_timer::callback(void)
 {
     user_callback();
+    regs->FLG = 1;
 }

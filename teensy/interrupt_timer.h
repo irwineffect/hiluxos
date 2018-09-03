@@ -12,6 +12,7 @@ class interrupt_timer
         void init(uint32_t value, uint8_t interrupt_enable,
                   void(*_user_callback)(void));
         void set_value(uint32_t value);
+        uint32_t get_value(void);
         void enable_interrupt(uint8_t enable);
         void enable_timer(uint8_t enable);
 

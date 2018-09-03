@@ -23,6 +23,7 @@ temperature sensing.
 - [x] Initial bootup from assembly to C/C++
 - [x] GPIO control
 - [x] UART
+- [x] Timers
 - [ ] SPI
 - [ ] RTC
 - [ ] ADC

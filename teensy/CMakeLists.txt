@@ -30,6 +30,7 @@ set (PERIPHERIAL_FILES
     clocks.cpp
     rtc.cpp
     interrupt_timer.cpp
+    nvic.cpp
 )
 
 add_executable(kernel.elf layout.ld startup.s handlers.s main.cpp ${PERIPHERIAL_FILES})
@@ -50,8 +51,8 @@ add_custom_target(upload
 
 add_custom_target(remote-upload
     DEPENDS kernel.hex
-    COMMAND rsync kernel.hex oryx:Repos/hiluxos/teensy/build
-    COMMAND ssh oryx /home/james/bin/remote-teensy-upload.sh
+    COMMAND rsync kernel.hex telperion:Repos/hiluxos/teensy/build
+    COMMAND ssh telperion /home/james/bin/remote-teensy-upload.sh
 )
 
 add_custom_target(dump

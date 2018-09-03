@@ -16,4 +16,7 @@ void clocks::enable_peripherals(void)
 
     // SPI0
     clock_gating_regs->SCGC6 |= (1 << 12);
+
+    // Timers
+    clock_gating_regs->SCGC6 |= (1 << 23);
 }

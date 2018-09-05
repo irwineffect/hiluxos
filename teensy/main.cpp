@@ -6,6 +6,7 @@
 #include "clocks.h"
 #include "interrupt_timer.h"
 #include "nvic.h"
+#include "rtc.h"
 
 uint8_t led_state = 0;
 void timer_callback(void)
@@ -13,6 +14,8 @@ void timer_callback(void)
     debug_led(led_state);
     led_state = !led_state;
     printf("timer callback\n");
+    rtc::time time = rtc_control.get_time();
+    printf("%u:%u:%u\n", time.hours, time.minutes, time.seconds);
 }
 
 int main (void)
@@ -20,6 +23,9 @@ int main (void)
     clock_control.enable_peripherals();
     uart_0.init();
     spi_0.init();
+    rtc::time time = {.hours = 22, .minutes = 14, .seconds = 0};
+    rtc_control.init();
+    rtc_control.set_time(time);
     interrupt_timer_0.init(0x5FFFFFF, 1, &timer_callback);
     interrupt_timer_0.enable_timer(1);
 

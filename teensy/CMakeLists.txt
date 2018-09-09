@@ -23,6 +23,7 @@ set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T ${LINKER_SCRIPT}")
 
 set (PERIPHERIAL_FILES
     debug.cpp
+    service.cpp
     pin_control.cpp
     uart.cpp
     printf.cpp

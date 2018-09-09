@@ -7,6 +7,7 @@
 #include "interrupt_timer.h"
 #include "nvic.h"
 #include "rtc.h"
+#include "service.h"
 
 uint8_t led_state = 0;
 void timer_callback(void)
@@ -37,6 +38,7 @@ int main (void)
         //printf("timer: %d\n", interrupt_timer_0.get_value());
         //debug_led(0);
         for (uint32_t j = 0; j < 0x1FFFFF; ++j);
+        printf("result: %d\n\n",svc(static_cast<SVC_TYPE>(1) ,2, 7, 8));
     }
 
     return 0;

@@ -16,7 +16,7 @@
 .long _halt                        //   8:
 .long _halt                        //   9:
 .long _halt                        //  10:
-.long _svcall_handler              //  11: Supervisor Call (SVCall)
+.long _service_handler             //  11: Supervisor Call (SVCall)
 .long _halt                        //  12:
 .long _halt                        //  13:
 .long _halt                        //  14:
